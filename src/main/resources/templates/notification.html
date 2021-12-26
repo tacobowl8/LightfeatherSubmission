@@ -1,0 +1,64 @@
+<!DOCTYPE HTML>
+<html xmlns:th="https://www.thymeleaf.org" lang="en">
+
+<head> 
+	<style>
+		.error {color: #BF1722;
+				font-weight: bold; }
+		.sr-only {
+				position:absolute;
+				left:-10000px;
+				top:auto;
+				width:1px;
+				height:1px;
+				overflow:hidden; }
+	</style>	
+    <title>Notification Form</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+
+	<h1>Notification Form</h1>
+    <form action="#" th:action="@{/notification}" th:object="${notification}" method="post">
+    	<div class="error" th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}">First Name Error</div>
+    	<label for="firstName">First Name: </label><input id="firstName" type="text" th:field="*{firstName}" />
+    	<br/><br/>
+    	
+		<div class="error" th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}">Last Name Error</div>    
+        <label for="lastName">Last Name: </label><input id="lastName" type="text" th:field="*{lastName}" />
+        
+        <p>How would you prefer to be notified?</p>
+                
+        <div class="error" th:if="${#fields.hasErrors('email')}" th:errors="*{email}">Email Error</div>
+        <label class="sr-only" for="receiveEmail">Receive Email</label>
+        <input id="receiveEmail" type="checkbox" th:field="*{receiveEmail}"  />
+        <label for="email">Email</label>
+        <input id="email" th:disabled="${!notification.receiveEmail}" type="text" th:field="*{email}" />
+
+		<br/><br/>        
+        <div class="error" th:if="${#fields.hasErrors('phoneNumber')}" th:errors="*{phoneNumber}">Phone Number Error</div>
+        <label class="sr-only" for="receivePhone">Receive Phone Calls</label>
+        <input id="receivePhone" type="checkbox" th:field="*{receivePhoneCall}" /> 
+        <label for="phoneNumber">Phone Number</label>
+        <input id="phoneNumber" th:disabled="${!notification.receivePhoneCall}" type="text" th:field="*{phoneNumber}" />
+        
+        <br/><br/>
+		<div class="error" th:if="${#fields.hasErrors('supervisor')}" th:errors="*{supervisor}">Supervisor Error</div>        
+		<label for="supervisor">Supervisor: </label>
+		<select id="supervisor" th:field="*{supervisor}">
+			<option value="">Select Supervisor</option>
+			<option th:each="supervisor : ${supervisors}"
+					th:value="${supervisor.jurisdiction}+' - '+${supervisor.lastName}+', '+${supervisor.firstName}"
+					th:text="${supervisor.jurisdiction}+' - '+${supervisor.lastName}+', '+${supervisor.firstName}"></option>	
+		</select>
+				
+        <p><input type="submit" value="Submit" /></p>
+    </form>
+    <script>
+		document.getElementById('receiveEmail').onchange = function() {
+	    	document.getElementById('email').disabled = !this.checked; };
+	    document.getElementById('receivePhone').onchange = function() {
+	        document.getElementById('phoneNumber').disabled = !this.checked; };
+	</script>
+</body>
+</html>
